@@ -1,0 +1,962 @@
+{
+  "_version": "4.0",
+  "metadata": [
+    {
+      "name": "FORMAT",
+      "value": "1A"
+    },
+    {
+      "name": "HOST",
+      "value": "http://polls.apiblueprint.org/"
+    }
+  ],
+  "name": "Polls",
+  "description": "Polls is a simple API allowing consumers to view polls and vote in them.\n\n",
+  "element": "category",
+  "resourceGroups": [
+    {
+      "name": "Question",
+      "description": "Resources related to questions in the API.\n\n",
+      "resources": [
+        {
+          "element": "resource",
+          "name": "Question",
+          "description": "",
+          "uriTemplate": "/questions/{question_id}",
+          "model": {},
+          "parameters": [
+            {
+              "name": "question_id",
+              "description": "ID of the Question in form of an integer",
+              "type": "number",
+              "required": true,
+              "default": "",
+              "example": "1",
+              "values": []
+            }
+          ],
+          "actions": [
+            {
+              "name": "View a Questions Detail",
+              "description": "",
+              "method": "GET",
+              "parameters": [],
+              "attributes": {
+                "relation": "",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "200",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "body": "{\n  \"choices\": [],\n  \"published_at\": \"2014-11-11T08:40:51.620Z\",\n  \"question\": \"Favourite programming language?\",\n  \"url\": \"/questions/1\"\n}",
+                      "schema": "",
+                      "content": [
+                        {
+                          "element": "dataStructure",
+                          "content": [
+                            {
+                              "element": "Question"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Delete a Question",
+              "description": "",
+              "method": "DELETE",
+              "parameters": [],
+              "attributes": {
+                "relation": "delete",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "204",
+                      "description": "",
+                      "headers": [],
+                      "body": "",
+                      "schema": "",
+                      "content": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "content": [
+            {
+              "element": "dataStructure",
+              "content": [
+                {
+                  "element": "object",
+                  "meta": {
+                    "id": "Question"
+                  },
+                  "content": [
+                    {
+                      "element": "member",
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "question"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "Favourite programming language?"
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "meta": {
+                        "description": "An ISO8601 date when the question was published"
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "published_at"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "2014-11-11T08:40:51.620Z"
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "meta": {
+                        "description": "An array of Choice objects"
+                      },
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "choices"
+                        },
+                        "value": {
+                          "element": "array",
+                          "content": [
+                            {
+                              "element": "Choice"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "url"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "/questions/1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "element": "resource",
+          "name": "Choice",
+          "description": "",
+          "uriTemplate": "/questions/{question_id}/choices/{choice_id}",
+          "model": {},
+          "parameters": [
+            {
+              "name": "question_id",
+              "description": "ID of the Question in form of an integer",
+              "type": "number",
+              "required": true,
+              "default": "",
+              "example": "1",
+              "values": []
+            },
+            {
+              "name": "choice_id",
+              "description": "ID of the Choice in form of an integer",
+              "type": "number",
+              "required": true,
+              "default": "",
+              "example": "1",
+              "values": []
+            }
+          ],
+          "actions": [
+            {
+              "name": "Vote on a Choice",
+              "description": "This action allows you to vote on a question's choice.\n\n",
+              "method": "POST",
+              "parameters": [],
+              "attributes": {
+                "relation": "vote",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "201",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Location",
+                          "value": "/questions/1"
+                        }
+                      ],
+                      "body": "",
+                      "schema": "",
+                      "content": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "content": [
+            {
+              "element": "dataStructure",
+              "content": [
+                {
+                  "element": "object",
+                  "meta": {
+                    "id": "Choice"
+                  },
+                  "content": [
+                    {
+                      "element": "member",
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "choice"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "Swift"
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "votes"
+                        },
+                        "value": {
+                          "element": "number",
+                          "content": 0
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "element": "resource",
+          "name": "Questions Collection",
+          "description": "",
+          "uriTemplate": "/questions{?page}",
+          "model": {},
+          "parameters": [
+            {
+              "name": "page",
+              "description": "The page of questions to return",
+              "type": "number",
+              "required": false,
+              "default": "",
+              "example": "1",
+              "values": []
+            }
+          ],
+          "actions": [
+            {
+              "name": "List All Questions",
+              "description": "",
+              "method": "GET",
+              "parameters": [],
+              "attributes": {
+                "relation": "questions",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "200",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Content-Type",
+                          "value": "application/json"
+                        },
+                        {
+                          "name": "Link",
+                          "value": "</questions?page=2>; rel=\"next\""
+                        }
+                      ],
+                      "body": "[]",
+                      "schema": "",
+                      "content": [
+                        {
+                          "element": "dataStructure",
+                          "content": [
+                            {
+                              "element": "array"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Create a New Question",
+              "description": "You may create your own question using this action. It takes a JSON\nobject containing a question and a collection of answers in the\nform of choices.\n\n",
+              "method": "POST",
+              "parameters": [],
+              "attributes": {
+                "relation": "create",
+                "uriTemplate": ""
+              },
+              "content": [
+                {
+                  "element": "dataStructure",
+                  "content": [
+                    {
+                      "element": "object",
+                      "content": [
+                        {
+                          "element": "member",
+                          "meta": {
+                            "description": "The question"
+                          },
+                          "attributes": {
+                            "typeAttributes": [
+                              "required"
+                            ]
+                          },
+                          "content": {
+                            "key": {
+                              "element": "string",
+                              "content": "question"
+                            },
+                            "value": {
+                              "element": "string"
+                            }
+                          }
+                        },
+                        {
+                          "element": "member",
+                          "meta": {
+                            "description": "A collection of choices."
+                          },
+                          "content": {
+                            "key": {
+                              "element": "string",
+                              "content": "choices"
+                            },
+                            "value": {
+                              "element": "array",
+                              "content": [
+                                {
+                                  "element": "string"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "201",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "body": "{\n  \"choices\": [],\n  \"published_at\": \"2014-11-11T08:40:51.620Z\",\n  \"question\": \"Favourite programming language?\",\n  \"url\": \"/questions/1\"\n}",
+                      "schema": "",
+                      "content": [
+                        {
+                          "element": "dataStructure",
+                          "content": [
+                            {
+                              "element": "Question"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "content": [
+            {
+              "element": "dataStructure",
+              "content": [
+                {
+                  "element": "array",
+                  "meta": {
+                    "id": "Questions Collection"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "content": [
+    {
+      "element": "category",
+      "attributes": {
+        "name": "Question"
+      },
+      "content": [
+        {
+          "element": "copy",
+          "content": "Resources related to questions in the API.\n\n"
+        },
+        {
+          "element": "resource",
+          "name": "Question",
+          "description": "",
+          "uriTemplate": "/questions/{question_id}",
+          "model": {},
+          "parameters": [
+            {
+              "name": "question_id",
+              "description": "ID of the Question in form of an integer",
+              "type": "number",
+              "required": true,
+              "default": "",
+              "example": "1",
+              "values": []
+            }
+          ],
+          "actions": [
+            {
+              "name": "View a Questions Detail",
+              "description": "",
+              "method": "GET",
+              "parameters": [],
+              "attributes": {
+                "relation": "",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "200",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "body": "{\n  \"choices\": [],\n  \"published_at\": \"2014-11-11T08:40:51.620Z\",\n  \"question\": \"Favourite programming language?\",\n  \"url\": \"/questions/1\"\n}",
+                      "schema": "",
+                      "content": [
+                        {
+                          "element": "dataStructure",
+                          "content": [
+                            {
+                              "element": "Question"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Delete a Question",
+              "description": "",
+              "method": "DELETE",
+              "parameters": [],
+              "attributes": {
+                "relation": "delete",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "204",
+                      "description": "",
+                      "headers": [],
+                      "body": "",
+                      "schema": "",
+                      "content": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "content": [
+            {
+              "element": "dataStructure",
+              "content": [
+                {
+                  "element": "object",
+                  "meta": {
+                    "id": "Question"
+                  },
+                  "content": [
+                    {
+                      "element": "member",
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "question"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "Favourite programming language?"
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "meta": {
+                        "description": "An ISO8601 date when the question was published"
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "published_at"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "2014-11-11T08:40:51.620Z"
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "meta": {
+                        "description": "An array of Choice objects"
+                      },
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "choices"
+                        },
+                        "value": {
+                          "element": "array",
+                          "content": [
+                            {
+                              "element": "Choice"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "url"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "/questions/1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "element": "resource",
+          "name": "Choice",
+          "description": "",
+          "uriTemplate": "/questions/{question_id}/choices/{choice_id}",
+          "model": {},
+          "parameters": [
+            {
+              "name": "question_id",
+              "description": "ID of the Question in form of an integer",
+              "type": "number",
+              "required": true,
+              "default": "",
+              "example": "1",
+              "values": []
+            },
+            {
+              "name": "choice_id",
+              "description": "ID of the Choice in form of an integer",
+              "type": "number",
+              "required": true,
+              "default": "",
+              "example": "1",
+              "values": []
+            }
+          ],
+          "actions": [
+            {
+              "name": "Vote on a Choice",
+              "description": "This action allows you to vote on a question's choice.\n\n",
+              "method": "POST",
+              "parameters": [],
+              "attributes": {
+                "relation": "vote",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "201",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Location",
+                          "value": "/questions/1"
+                        }
+                      ],
+                      "body": "",
+                      "schema": "",
+                      "content": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "content": [
+            {
+              "element": "dataStructure",
+              "content": [
+                {
+                  "element": "object",
+                  "meta": {
+                    "id": "Choice"
+                  },
+                  "content": [
+                    {
+                      "element": "member",
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "choice"
+                        },
+                        "value": {
+                          "element": "string",
+                          "content": "Swift"
+                        }
+                      }
+                    },
+                    {
+                      "element": "member",
+                      "attributes": {
+                        "typeAttributes": [
+                          "required"
+                        ]
+                      },
+                      "content": {
+                        "key": {
+                          "element": "string",
+                          "content": "votes"
+                        },
+                        "value": {
+                          "element": "number",
+                          "content": 0
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "element": "resource",
+          "name": "Questions Collection",
+          "description": "",
+          "uriTemplate": "/questions{?page}",
+          "model": {},
+          "parameters": [
+            {
+              "name": "page",
+              "description": "The page of questions to return",
+              "type": "number",
+              "required": false,
+              "default": "",
+              "example": "1",
+              "values": []
+            }
+          ],
+          "actions": [
+            {
+              "name": "List All Questions",
+              "description": "",
+              "method": "GET",
+              "parameters": [],
+              "attributes": {
+                "relation": "questions",
+                "uriTemplate": ""
+              },
+              "content": [],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "200",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Content-Type",
+                          "value": "application/json"
+                        },
+                        {
+                          "name": "Link",
+                          "value": "</questions?page=2>; rel=\"next\""
+                        }
+                      ],
+                      "body": "[]",
+                      "schema": "",
+                      "content": [
+                        {
+                          "element": "dataStructure",
+                          "content": [
+                            {
+                              "element": "array"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Create a New Question",
+              "description": "You may create your own question using this action. It takes a JSON\nobject containing a question and a collection of answers in the\nform of choices.\n\n",
+              "method": "POST",
+              "parameters": [],
+              "attributes": {
+                "relation": "create",
+                "uriTemplate": ""
+              },
+              "content": [
+                {
+                  "element": "dataStructure",
+                  "content": [
+                    {
+                      "element": "object",
+                      "content": [
+                        {
+                          "element": "member",
+                          "meta": {
+                            "description": "The question"
+                          },
+                          "attributes": {
+                            "typeAttributes": [
+                              "required"
+                            ]
+                          },
+                          "content": {
+                            "key": {
+                              "element": "string",
+                              "content": "question"
+                            },
+                            "value": {
+                              "element": "string"
+                            }
+                          }
+                        },
+                        {
+                          "element": "member",
+                          "meta": {
+                            "description": "A collection of choices."
+                          },
+                          "content": {
+                            "key": {
+                              "element": "string",
+                              "content": "choices"
+                            },
+                            "value": {
+                              "element": "array",
+                              "content": [
+                                {
+                                  "element": "string"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "examples": [
+                {
+                  "name": "",
+                  "description": "",
+                  "requests": [],
+                  "responses": [
+                    {
+                      "name": "201",
+                      "description": "",
+                      "headers": [
+                        {
+                          "name": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "body": "{\n  \"choices\": [],\n  \"published_at\": \"2014-11-11T08:40:51.620Z\",\n  \"question\": \"Favourite programming language?\",\n  \"url\": \"/questions/1\"\n}",
+                      "schema": "",
+                      "content": [
+                        {
+                          "element": "dataStructure",
+                          "content": [
+                            {
+                              "element": "Question"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "content": [
+            {
+              "element": "dataStructure",
+              "content": [
+                {
+                  "element": "array",
+                  "meta": {
+                    "id": "Questions Collection"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -322,6 +322,7 @@ public class HyperBlueprint : Hyperdrive {
     if let attributes = object as? [String:AnyObject] {
       addAttributes([:], resource:resource, request: request, response: response, attributes: attributes, builder: builder)
     } else if let objects = object as? [[String:AnyObject]] {  // An array of other resources
+      // Legacy MSON AST
       if let typeSpecification = resource.typeSpecification {
         let name = typeSpecification["name"] as? String ?? ""
         if name == "array" {
@@ -336,6 +337,23 @@ public class HyperBlueprint : Hyperdrive {
                 }
               }
             }
+          }
+        }
+      }
+
+      // MSON Refract
+      if let content = resource.dataStructure?["content"] as? [[String: AnyObject]],
+             firstContent = content.first,
+             element = firstContent["element"] as? String,
+             meta = firstContent["meta"] as? [String: AnyObject],
+             id = meta["id"] as? String,
+             embeddedResource = self.resource(named: id)
+             where element == "array"
+      {
+        let relation = resource.actionForMethod(request.HTTPMethod ?? "GET")?.relation ?? "objects"
+        for object in objects {
+          builder.addRepresentor(relation) { builder in
+            self.addObjectResponse(embeddedResource, parameters: parameters, request: request, response: response, object: object, builder: builder)
           }
         }
       }
@@ -359,43 +377,49 @@ public class HyperBlueprint : Hyperdrive {
 
     func resourceForAttribute(key:String) -> Resource? {
       // TODO: Rewrite this to use proper refract structures
+
       if let dataStructure = resource.dataStructure {
-        if let sections = dataStructure["sections"] as? [[String:AnyObject]] {
-          if let section = sections.first {
-            if (section["class"] as? String ?? "") == "memberType" {
-              if let members = section["content"] as? [[String:AnyObject]] {
-                func findMember(member:[String:AnyObject]) -> Bool {
-                  if let content = member["content"] as? [String:AnyObject] {
-                    if let name = content["name"] as? [String:String] {
-                      if let literal = name["literal"] {
-                        return literal == key
-                      }
-                    }
-                  }
+        // Legacy MSON AST
+        if let sections = dataStructure["sections"] as? [[String:AnyObject]],
+               section = sections.first
+        {
+          if let members = section["content"] as? [[String:AnyObject]] where (section["class"] as? String ?? "") == "memberType" {
+            func findMember(member:[String:AnyObject]) -> Bool {
+              if let content = member["content"] as? [String:AnyObject],
+                     name = content["name"] as? [String:String],
+                     literal = name["literal"]
+              {
+                return literal == key
+              }
+              return false
+            }
 
-                  return false
-                }
-
-                if let member = members.filter(findMember).first {
-                  if let content = member["content"] as? [String:AnyObject] {
-                    if let definition = content["valueDefinition"] as? [String:AnyObject] {
-                      if let typeDefinition = definition["typeDefinition"] as? [String:AnyObject] {
-                        if let typeSpecification = typeDefinition["typeSpecification"] as? [String:AnyObject] {
-                          if let name = typeSpecification["name"] as? String {
-                            if name == "array" {
-                              if let literal = (typeSpecification["nestedTypes"] as? [[String:AnyObject]])?.first?["literal"] as? String {
-                                return self.resource(named:literal)
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+            if let member = members.filter(findMember).first,
+                   content = member["content"] as? [String:AnyObject],
+                   definition = content["valueDefinition"] as? [String:AnyObject],
+                   typeDefinition = definition["typeDefinition"] as? [String:AnyObject],
+                   typeSpecification = typeDefinition["typeSpecification"] as? [String:AnyObject],
+                   name = typeSpecification["name"] as? String
+            {
+              if name == "array" {
+                if let literal = (typeSpecification["nestedTypes"] as? [[String:AnyObject]])?.first?["literal"] as? String {
+                  return self.resource(named:literal)
                 }
               }
             }
           }
+        }
+
+        // MSON Refract from API Blueprint AST
+        if let content = dataStructure["content"] as? [[String: AnyObject]],
+               firstContent = content.first,
+               meta = firstContent["meta"] as? [String: AnyObject],
+               id = meta["id"] as? String,
+               element = firstContent["element"] as? String
+               where element == "array"
+        {
+          print(firstContent)
+          return self.resource(named: id)
         }
       }
       
