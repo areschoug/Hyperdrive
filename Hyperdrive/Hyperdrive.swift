@@ -70,8 +70,8 @@ public class Hyperdrive {
   let preferredContentTypes:[String]
 
   /** Initialize hyperdrive
-  - parameter preferredContentTypes: An optional array of the supported content types in order of preference, when this is nil. All types supported by the Representor will be used.
-  */
+   - parameter preferredContentTypes: An optional array of the supported content types in order of preference, when this is nil. All types supported by the Representor will be used.
+   */
   public init(preferredContentTypes:[String]? = nil) {
     let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
     session = NSURLSession(configuration: configuration)
@@ -151,15 +151,19 @@ public class Hyperdrive {
       } else {
         let representor = self.constructResponse(request, response:response as! NSHTTPURLResponse, body: body)
         dispatch_async(dispatch_get_main_queue()) {
-					if let representor = representor {
-						completion(.Success(representor))
-					} else {
-						let code = Int(CFNetworkErrors.CFErrorHTTPParseFailure.rawValue)
-						let domain = kCFErrorDomainCFNetwork as String ?? ""
-						let parseError:NSError = NSError(domain: domain, code: code, userInfo: ["request":request, "response" : response])
-						completion(.Failure(parseError))
-					}
+          if let representor = representor {
+            completion(.Success(representor))
+          } else {
+            let code = Int(CFNetworkErrors.CFErrorHTTPParseFailure.rawValue)
+            let domain = kCFErrorDomainCFNetwork as String ?? ""
 
+            var userInfo:[String : AnyObject] = ["request" : request]
+            if let response = response { userInfo["response"] = response }
+
+            let parseError:NSError = NSError(domain: domain, code: code, userInfo: userInfo)
+            completion(.Failure(parseError))
+
+          }
         }
       }
     })
