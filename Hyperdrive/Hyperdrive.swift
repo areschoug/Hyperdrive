@@ -149,9 +149,17 @@ public class Hyperdrive {
           completion(.Failure(error))
         }
       } else {
-        let representor = self.constructResponse(request, response:response as! NSHTTPURLResponse, body: body) ?? Representor<HTTPTransition>()
+        let representor = self.constructResponse(request, response:response as! NSHTTPURLResponse, body: body)
         dispatch_async(dispatch_get_main_queue()) {
-          completion(.Success(representor))
+					if let representor = representor {
+						completion(.Success(representor))
+					} else {
+						let code = Int(CFNetworkErrors.CFErrorHTTPParseFailure.rawValue)
+						let domain = kCFErrorDomainCFNetwork as String ?? ""
+						let parseError:NSError = NSError(domain: domain, code: code, userInfo: ["request":request, "response" : response])
+						completion(.Failure(parseError))
+					}
+
         }
       }
     })
