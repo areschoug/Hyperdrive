@@ -30,26 +30,41 @@ func absoluteURI(baseURL:NSURL?)(uri:String) -> String {
 
 /// Traverses a representor and ensures that all URIs are absolute given a base URL
 func absoluteRepresentor(baseURL:NSURL?)(original:Representor<HTTPTransition>) -> Representor<HTTPTransition> {
-  let transitions = map(original.transitions) { transition in
-    return HTTPTransition(uri: absoluteURI(baseURL)(uri: transition.uri)) { builder in
-      builder.method = transition.method
-      builder.suggestedContentTypes = transition.suggestedContentTypes
 
-      for (name, attribute) in transition.attributes {
-        builder.addAttribute(name, value: attribute.value, defaultValue: attribute.defaultValue)
+  var transitionsDict:[String:[HTTPTransition]] = [:]
+
+  for transitionKey in original.transitions.keys {
+
+    guard let transitions = original.transitions[transitionKey] else { continue }
+
+    var transitionValues:[HTTPTransition] = []
+
+    for transition in transitions {
+
+      let x = HTTPTransition(uri: absoluteURI(baseURL)(uri: transition.uri)) { builder in
+        builder.method = transition.method
+        builder.suggestedContentTypes = transition.suggestedContentTypes
+
+        for (name, attribute) in transition.attributes {
+          builder.addAttribute(name, value: attribute.value, defaultValue: attribute.defaultValue)
+        }
+
+        for (name, parameter) in transition.parameters {
+          builder.addParameter(name, value: parameter.value, defaultValue: parameter.defaultValue)
+        }
       }
 
-      for (name, parameter) in transition.parameters {
-        builder.addParameter(name, value: parameter.value, defaultValue: parameter.defaultValue)
-      }
+      transitionValues.append(x)
     }
+
+    transitionsDict[transitionKey] = transitionValues
   }
 
   let representors = map(original.representors) { representors in
     representors.map(absoluteRepresentor(baseURL))
   }
 
-  return Representor(transitions: transitions, representors: representors, attributes: original.attributes, metadata: original.metadata)
+  return Representor(transitions: transitionsDict, representors: representors, attributes: original.attributes, metadata: original.metadata)
 }
 
 
@@ -184,7 +199,7 @@ public class Hyperdrive {
   /// Perform a transition with a given parameters and attributes
   public func request(transition:HTTPTransition, parameters:[String:AnyObject]? = nil, attributes:[String:AnyObject]? = nil, completion:(RepresentorResult -> Void)) {
     let result = constructRequest(transition, parameters: parameters, attributes: attributes)
-
+    
     switch result {
     case .Success(let request):
       self.request(request, completion:completion)
